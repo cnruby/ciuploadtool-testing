@@ -1,0 +1,57 @@
+language: cpp
+
+sudo: required
+dist: trusty
+
+branches:
+    only:
+        - master
+        - development
+
+matrix:
+    include:
+        - os: linux
+          env: COMPILER=g++-4.6 CMAKE_BUILD_TYPE=Debug
+
+        - os: linux
+          env: COMPILER=clang++ CMAKE_BUILD_TYPE=Debug
+
+install:
+    - |
+      if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+        export DISPLAY=:99.0 &&
+        sh -e /etc/init.d/xvfb start &&
+        wget http://www.cmake.org/files/v3.2/cmake-3.2.0-Linux-x86_64.tar.gz &&
+        tar -xzf cmake-3.2.0-Linux-x86_64.tar.gz &&
+        sudo cp -fR cmake-3.2.0-Linux-x86_64/* /usr &&
+        sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test &&
+        if [ "${COMPILER}" = "g++-4.6" ]; then
+          sudo apt-get -qq install g++-4.6 gcc-4.6 &&
+          export CXX="g++-4.6" &&
+          export CC="gcc-4.6"
+        elif [ "${COMPILER}" = "clang++" ]; then
+          export CXX="clang++" &&
+          export CC="clang"
+        fi
+      else
+        brew update &&
+        brew unlink cmake &&
+        brew install cmake &&
+        brew link cmake
+      fi
+
+script:
+    - |
+      export DIR=$(pwd) &&
+      mkdir build &&
+      cd build &&
+      cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/installdir &&
+      make &&
+      make install
+
+after_success:
+    - |
+      if [ "${TRAVIS_BRANCH}" = "master" ] || [ "${TRAVIS_BRANCH}" = "development" ]; then
+        wget -c https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go &&
+        go run ciuploadtool.go -suffix="continuous-$TRAVIS_OS_NAME-$TRAVIS_BRANCH" installdir/bin/*
+      fi
