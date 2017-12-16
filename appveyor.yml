@@ -8,10 +8,6 @@ branches:
 environment: 
   auth_token:
     secure: 7DjX/0v2lEQxR10o1vjqh5mrqgNB8rp1xANMofZYVDC5jzOiymdTQZqqbKFhXHyJ
-
-  matrix:
-    fast_finish: true
-
   matrix:
     - name: win32
       platform: amd64_x86
@@ -54,7 +50,10 @@ artifacts:
   - path: '*.zip'
     name: archive
 
-after_success:
+on_finish:
     - curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
     - set PATH=C:\go\bin;%PATH%
     - if %APPVEYOR_REPO_BRANCH%==master || %APPVEYOR_REPO_BRANCH%==development go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
+
+matrix:
+  fast_finish: true
