@@ -54,8 +54,11 @@ on_finish:
     - set PATH=C:\go\bin;%PATH%
     - if %APPVEYOR_REPO_BRANCH%==master set should_deploy=yes
     - if %APPVEYOR_REPO_BRANCH%==development set should_deploy=yes
+    - if %should_deploy%==yes cd c:\dev
+    - if %should_deploy%==yes md go
+    - if %should_deploy%==yes cd go
     - if %should_deploy%==yes curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
-    - if %should_deploy%==yes set GOPATH=%cd%;%GOPATH%
+    - if %should_deploy%==yes set GOPATH=%cd%
     - if %should_deploy%==yes go get golang.org/x/oauth2
     - if %should_deploy%==yes go get github.com/google/go-github/github
     - if %should_deploy%==yes go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
