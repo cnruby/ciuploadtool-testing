@@ -58,7 +58,6 @@ on_finish:
     - if %should_deploy%==yes cd c:\dev
     - if %should_deploy%==yes md go
     - if %should_deploy%==yes cd go
-    - if %should_deploy%==yes dir /s %APPVEYOR_BUILD_FOLDER%\artifacts
     - if %should_deploy%==yes curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
     - if %should_deploy%==yes set GOPATH=%cd%
     - if %should_deploy%==yes go get golang.org/x/oauth2
