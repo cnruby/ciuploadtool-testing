@@ -62,7 +62,7 @@ on_finish:
     - if %should_deploy%==yes set GOPATH=%cd%
     - if %should_deploy%==yes go get golang.org/x/oauth2
     - if %should_deploy%==yes go get github.com/google/go-github/github
-    - if %should_deploy%==yes go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
+    - if %should_deploy%==yes go run ciuploadtool.go -suffix="%APPVEYOR_REPO_BRANCH%" c:\dev\install\bin\*
 
 matrix:
   fast_finish: true
