@@ -53,9 +53,9 @@ artifacts:
 on_finish:
     - curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
     - set PATH=C:\go\bin;%PATH%
-    - if %APPVEYOR_REPO_BRANCH%==master set should_deploy=true
-    - if %APPVEYOR_REPO_BRANCH%==development set should_deploy=true
-    - if %should_deploy%=="true" go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
+    - if %APPVEYOR_REPO_BRANCH%==master set should_deploy=yes
+    - if %APPVEYOR_REPO_BRANCH%==development set should_deploy=yes
+    - if %should_deploy%==yes go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
 
 matrix:
   fast_finish: true
