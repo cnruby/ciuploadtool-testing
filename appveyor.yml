@@ -44,7 +44,8 @@ build_script:
 after_build:
   - cd c:\dev
   - 7z a %DEPLOYMENT_TARGET% c:\dev\install\*
-  - cp %DEPLOYMENT_TARGET% %APPVEYOR_BUILD_FOLDER%
+  - md %APPVEYOR_BUILD_FOLDER%\artifacts
+  - cp %DEPLOYMENT_TARGET% %APPVEYOR_BUILD_FOLDER%\artifacts
 
 artifacts:
   - path: '*.zip'
@@ -57,12 +58,12 @@ on_finish:
     - if %should_deploy%==yes cd c:\dev
     - if %should_deploy%==yes md go
     - if %should_deploy%==yes cd go
-    - if %should_deploy%==yes dir /s c:\dev\install
+    - if %should_deploy%==yes dir /s %APPVEYOR_BUILD_FOLDER%\artifacts
     - if %should_deploy%==yes curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
     - if %should_deploy%==yes set GOPATH=%cd%
     - if %should_deploy%==yes go get golang.org/x/oauth2
     - if %should_deploy%==yes go get github.com/google/go-github/github
-    - if %should_deploy%==yes go run ciuploadtool.go -suffix="%APPVEYOR_REPO_BRANCH%" c:\dev\install\bin\*
+    - if %should_deploy%==yes go run ciuploadtool.go -suffix="%APPVEYOR_REPO_BRANCH%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
 
 matrix:
   fast_finish: true
