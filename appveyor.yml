@@ -1,0 +1,60 @@
+version: '0.1.0-{build}'
+
+branches:
+  only:
+    - master
+    - development
+
+environment: 
+  auth_token:
+    secure: 7DjX/0v2lEQxR10o1vjqh5mrqgNB8rp1xANMofZYVDC5jzOiymdTQZqqbKFhXHyJ
+
+  matrix:
+    fast_finish: true
+
+  matrix:
+    - name: win32
+      platform: amd64_x86
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      name: win64
+      platform: amd64
+    - name: win32
+      platform: mingw
+
+clone_folder: c:\dev\ciuploadtool-testing
+
+init:
+  - set ORIGPATH=%PATH%
+  - set DEPLOYMENT_TARGET=ciuploadtool-testing-%platform%-%APPVEYOR_BUILD_VERSION%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
+  - if %platform%==amd64 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
+  - if not %platform%==mingw (set makefiles="NMake Makefiles") else (set makefiles="MinGW Makefiles")
+  - if %platform%==mingw set PATH=C:\MinGW\bin;C:\Program Files (x86)\CMake\bin;%PATH%
+  - if %qt%==msvc2017_64 set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
+  - if %qt%==msvc2015 set PATH="C:\Program Files (x86)\MSBuild\14.0\Bin";%PATH%
+
+before_build:
+  - cd c:\dev\ciuploadtool-testing
+  - md build
+
+build_script:
+  - cd c:\dev\ciuploadtool-testing\build
+  - if %platform%==mingw set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - cmake .. -G %makefiles% -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="c:/dev/install"
+  - cmake --build . --target all
+  - cmake --build . --target install
+  - if %qt%==mingw492_32 set PATH=%ORIGPATH%
+
+after_build:
+  - cd c:\dev
+  - 7z a %DEPLOYMENT_TARGET% c:\dev\install\*
+  - cp %DEPLOYMENT_TARGET% %APPVEYOR_BUILD_FOLDER%
+
+artifacts:
+  - path: '*.zip'
+    name: archive
+
+after_success:
+    - curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
+    - set PATH=C:\go\bin;%PATH%
+    - if %APPVEYOR_REPO_BRANCH%==master || %APPVEYOR_REPO_BRANCH%==development go run ciuploadtool.go -suffix="continuous-windows-%APPVEYOR_REPO_BRANCH%" c:\dev\install\*
