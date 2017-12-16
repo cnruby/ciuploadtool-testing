@@ -45,7 +45,7 @@ script:
       export DIR=$(pwd) &&
       mkdir build &&
       cd build &&
-      cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/installdir &&
+      cmake -DCMAKE_INSTALL_PREFIX=$(pwd)/installdir .. &&
       make &&
       make install
 
