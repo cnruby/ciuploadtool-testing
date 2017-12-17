@@ -65,7 +65,8 @@ on_finish:
     - if %should_deploy%==yes set GOPATH=%cd%
     - if %should_deploy%==yes go get golang.org/x/oauth2
     - if %should_deploy%==yes go get github.com/google/go-github/github
-    - if %should_deploy%==yes go run ciuploadtool.go -suffix="%APPVEYOR_REPO_BRANCH%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
+    - if %should_deploy%==yes if %APPVEYOR_REPO_TAG%==true set SUFFIX=%APPVEYOR_REPO_TAG_NAME% else set SUFFIX=%APPVEYOR_REPO_BRANCH%
+    - if %should_deploy%==yes go run ciuploadtool.go -suffix="%SUFFIX%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
 
 matrix:
   fast_finish: true
