@@ -23,7 +23,7 @@ init:
   - set ORIGPATH=%PATH%
   - if %platform%==amd64 set tool=VS2017_x64
   - if %platform%==amd64_x86 set tool=VS2015_x86
-  - if %platform%==mingw set tool=MinGW
+  - if %platform%==mingw set tool=MinGW_x86
   - set DEPLOYMENT_TARGET=ciuploadtool-testing_windows-%tool%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
   - if %platform%==amd64 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
