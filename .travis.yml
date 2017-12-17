@@ -56,7 +56,7 @@ script:
         export OSNAME="mac"
       fi
       export PLATFORM=$(uname -p) &&
-      export DEPLOYMENT_TARGET=ciuploadtool_${OSNAME}_${PLATFORM}_${TRAVIS_COMMIT:0:7}.zip &&
+      export DEPLOYMENT_TARGET=ciuploadtool-testing_${OSNAME}_${PLATFORM}_${TRAVIS_COMMIT:0:7}.zip &&
       cd installdir/bin &&
       7z a $DEPLOYMENT_TARGET * &&
       cd ../../
