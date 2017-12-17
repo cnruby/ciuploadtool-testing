@@ -64,7 +64,7 @@ script:
 
 after_success:
     - |
-      if [ "${TRAVIS_BRANCH}" = "master" ] || [ "${TRAVIS_BRANCH}" = "development" ] || [ "${TRAVIS_BRANCH}" =~ ^\d+\.\d+(\.\d+)?(-\S*)?$ ]; then
+      if [ "${TRAVIS_BRANCH}" = "master" ] || [ "${TRAVIS_BRANCH}" = "development" ] || [ "${TRAVIS_BRANCH}" =~ "^\d+\.\d+(\.\d+)?(-\S*)?$" ]; then
         wget -c https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go &&
         go get golang.org/x/oauth2 &&
         go get github.com/google/go-github/github &&
