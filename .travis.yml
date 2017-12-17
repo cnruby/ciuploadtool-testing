@@ -55,5 +55,5 @@ after_success:
         wget -c https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go &&
         go get golang.org/x/oauth2 &&
         go get github.com/google/go-github/github &&
-        go run ciuploadtool.go -suffix="continuous-$TRAVIS_OS_NAME-$TRAVIS_BRANCH" installdir/bin/*
+        go run ciuploadtool.go -suffix="$TRAVIS_BRANCH" installdir/bin/*
       fi
