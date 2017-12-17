@@ -57,7 +57,7 @@ script:
       fi
       export PLATFORM=$(uname -p) &&
       export DEPLOYMENT_TARGET=ciuploadtool_$OSNAME_$PLATFORM_${TRAVIS_COMMIT:0:7}.zip &&
-      cd installdir\bin &&
+      cd installdir/bin &&
       7z a $DEPLOYMENT_TARGET * &&
       cd ../../
 
