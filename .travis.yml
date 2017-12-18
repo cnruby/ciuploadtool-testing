@@ -64,7 +64,12 @@ script:
 
 after_success:
     - |
-      wget -c https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go &&
-      go get golang.org/x/oauth2 &&
-      go get github.com/google/go-github/github &&
-      go run ciuploadtool.go -suffix="$TRAVIS_BRANCH" installdir/bin/$DEPLOYMENT_TARGET
+      if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+        wget https://github.com/d1vanov/ciuploadtool/releases/download/continuous-master/ciuploadtool_linux.zip &&
+        unzip ciuploadtool_linux.zip
+      else
+        wget https://github.com/d1vanov/ciuploadtool/releases/download/continuous-master/ciuploadtool_mac.zip &&
+        unzip ciuploadtool_mac.zip
+      fi
+    - chmod 755 ciuploadtool
+    - ./ciuploadtool -suffix="$TRAVIS_BRANCH" installdir/bin/$DEPLOYMENT_TARGET
