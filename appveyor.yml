@@ -60,13 +60,9 @@ on_finish:
     - echo "APPVEYOR_REPO_BRANCH = "
     - echo %APPVEYOR_REPO_BRANCH%
     - cd c:\dev
-    - md go
-    - cd go
-    - curl -fsSL https://github.com/d1vanov/ciuploadtool/raw/master/ciuploadtool.go -o ciuploadtool.go
-    - set GOPATH=%cd%
-    - go get golang.org/x/oauth2
-    - go get github.com/google/go-github/github
-    - go run ciuploadtool.go -suffix="%APPVEYOR_REPO_BRANCH%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
+    - curl -fsSL https://github.com/d1vanov/ciuploadtool/releases/download/continuous-master/ciuploadtool_windows_x86.zip -o ciuploadtool_windows_x86.zip
+    - 7z x ciuploadtool_windows_x86.zip
+    - ciuploadtool -suffix="%APPVEYOR_REPO_BRANCH%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
 
 matrix:
   fast_finish: true
