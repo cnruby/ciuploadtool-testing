@@ -11,6 +11,8 @@ environment:
     secure: 7DjX/0v2lEQxR10o1vjqh5mrqgNB8rp1xANMofZYVDC5jzOiymdTQZqqbKFhXHyJ
   matrix:
     - prepare_mode: YES
+      name: win32
+      platform: x86
     - prepare_mode: NO
       name: win32
       platform: amd64_x86
