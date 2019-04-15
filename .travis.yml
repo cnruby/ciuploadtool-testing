@@ -73,5 +73,3 @@ after_success:
       fi
     - chmod 755 ciuploadtool
     - ./ciuploadtool -suffix="$TRAVIS_BRANCH" installdir/bin/$DEPLOYMENT_TARGET
-
-# dummy line to trigger build
