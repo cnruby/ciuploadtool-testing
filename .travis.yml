@@ -72,4 +72,4 @@ after_success:
         unzip ciuploadtool_mac.zip
       fi
     - chmod 755 ciuploadtool
-    - ./ciuploadtool -suffix="$TRAVIS_BRANCH" installdir/bin/$DEPLOYMENT_TARGET
+    - ./ciuploadtool -verbose -suffix="$TRAVIS_BRANCH" installdir/bin/$DEPLOYMENT_TARGET
