@@ -1,4 +1,4 @@
-version: '0.1.0-{build}'
+version: '0.2.0-{build}'
 
 branches:
   only:
@@ -6,14 +6,16 @@ branches:
     - development
     - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
-environment: 
+environment:
   auth_token:
     secure: 7DjX/0v2lEQxR10o1vjqh5mrqgNB8rp1xANMofZYVDC5jzOiymdTQZqqbKFhXHyJ
   matrix:
     - prepare_mode: YES
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       name: win32
-      platform: x86
+      platform: amd64_x86
     - prepare_mode: NO
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       name: win32
       platform: amd64_x86
     - prepare_mode: NO
@@ -21,6 +23,7 @@ environment:
       name: win64
       platform: amd64
     - prepare_mode: NO
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
       name: win32
       platform: mingw
 
@@ -29,15 +32,14 @@ clone_folder: c:\dev\ciuploadtool-testing
 init:
   - set ORIGPATH=%PATH%
   - if %platform%==amd64 set tool=VS2017_x64
-  - if %platform%==amd64_x86 set tool=VS2015_x86
+  - if %platform%==amd64_x86 set tool=VS2017_x86
   - if %platform%==mingw set tool=MinGW_x86
   - set DEPLOYMENT_TARGET=ciuploadtool-testing_windows-%tool%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
   - if %platform%==amd64 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
+  - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
   - if not %platform%==mingw (set makefiles="NMake Makefiles") else (set makefiles="MinGW Makefiles")
   - if %platform%==mingw set PATH=C:\MinGW\bin;C:\Program Files (x86)\CMake\bin;%PATH%
-  - if %platform%==x64 set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
-  - if %platform%==x86 set PATH="C:\Program Files (x86)\MSBuild\14.0\Bin";%PATH%
+  - if not %platform%==mingw set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
 
 install:
   - md c:\dev\ciuploadtool

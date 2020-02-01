@@ -1,7 +1,9 @@
 language: cpp
 
 sudo: required
-dist: trusty
+dist: xenial
+services:
+        - xvfb
 
 branches:
     only:
@@ -12,7 +14,7 @@ branches:
 matrix:
     include:
         - os: linux
-          env: COMPILER=g++-4.6 CMAKE_BUILD_TYPE=Debug
+          env: COMPILER=g++-5.4 CMAKE_BUILD_TYPE=Debug
 
         - os: osx
           env: COMPILER=clang++ CMAKE_BUILD_TYPE=Debug
@@ -21,16 +23,11 @@ install:
     - |
       if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
         export DISPLAY=:99.0 &&
-        sh -e /etc/init.d/xvfb start &&
-        wget http://www.cmake.org/files/v3.2/cmake-3.2.0-Linux-x86_64.tar.gz &&
-        tar -xzf cmake-3.2.0-Linux-x86_64.tar.gz &&
-        sudo cp -fR cmake-3.2.0-Linux-x86_64/* /usr &&
         sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test &&
         sudo apt-get install p7zip-full &&
-        if [ "${COMPILER}" = "g++-4.6" ]; then
-          sudo apt-get -qq install g++-4.6 gcc-4.6 &&
-          export CXX="g++-4.6" &&
-          export CC="gcc-4.6"
+        if [ "${COMPILER}" = "g++-5.4" ]; then
+          export CXX="g++" &&
+          export CC="gcc"
         elif [ "${COMPILER}" = "clang++" ]; then
           export CXX="clang++" &&
           export CC="clang"
