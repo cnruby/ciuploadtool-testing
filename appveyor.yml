@@ -16,7 +16,7 @@ environment:
       platform: amd64_x86
     - prepare_mode: NO
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      name: win64
+      name: win32
       platform: amd64_x86
 
 clone_folder: c:\dev\ciuploadtool-testing
@@ -26,6 +26,8 @@ init:
   - if %platform%==amd64_x86 set tool=VS2017_x86
   - set DEPLOYMENT_TARGET=ciuploadtool-testing_windows-%tool%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
   - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+  - set makefiles="NMake Makefiles") else (set makefiles="MinGW Makefiles"
+  - set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
 
 install:
   - md c:\dev\ciuploadtool
