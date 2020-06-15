@@ -17,7 +17,7 @@ environment:
     - prepare_mode: NO
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       name: win64
-      platform: amd64
+      platform: amd64_x86
 
 clone_folder: c:\dev\ciuploadtool-testing
 
