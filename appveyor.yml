@@ -8,7 +8,7 @@ branches:
 
 environment:
   auth_token:
-    secure: 7DjX/0v2lEQxR10o1vjqh5mrqgNB8rp1xANMofZYVDC5jzOiymdTQZqqbKFhXHyJ
+    secure: 7PAadWhv0Xoxt7rz4NeSWaaSVEtPW0R01ZlHJ7Rqn8QEVKs4i0aBcjWtn7JiN7+X
   matrix:
     - prepare_mode: YES
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
