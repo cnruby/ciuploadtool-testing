@@ -1,4 +1,4 @@
-version: '0.4.0-{build}'
+version: '0.4.1-{build}'
 
 branches:
   only:
@@ -16,30 +16,16 @@ environment:
       platform: amd64_x86
     - prepare_mode: NO
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      name: win32
-      platform: amd64_x86
-    - prepare_mode: NO
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       name: win64
       platform: amd64
-    - prepare_mode: NO
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-      name: win32
-      platform: mingw
 
 clone_folder: c:\dev\ciuploadtool-testing
 
 init:
   - set ORIGPATH=%PATH%
-  - if %platform%==amd64 set tool=VS2017_x64
   - if %platform%==amd64_x86 set tool=VS2017_x86
-  - if %platform%==mingw set tool=MinGW_x86
   - set DEPLOYMENT_TARGET=ciuploadtool-testing_windows-%tool%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
-  - if %platform%==amd64 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   - if %platform%==amd64_x86 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
-  - if not %platform%==mingw (set makefiles="NMake Makefiles") else (set makefiles="MinGW Makefiles")
-  - if %platform%==mingw set PATH=C:\MinGW\bin;C:\Program Files (x86)\CMake\bin;%PATH%
-  - if not %platform%==mingw set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
 
 install:
   - md c:\dev\ciuploadtool
@@ -59,7 +45,6 @@ build_script:
   - cmake .. -G %makefiles% -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="c:/dev/install"
   - cmake --build . --target all
   - cmake --build . --target install
-  - if %platform%==mingw set PATH=%ORIGPATH%
 
 after_build:
   - cd c:\dev
