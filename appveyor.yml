@@ -2,7 +2,7 @@ version: '0.4.1-{build}'
 
 image:
   - Visual Studio 2017
-  - Ubuntu2004
+#  - Ubuntu2004
 
 branches:
   only:
@@ -21,49 +21,30 @@ environment:
       name: win32
       platform: amd64_x86
 
-clone_folder: c:\dev\ciuploadtool-testing
+clone_folder:
+  - ps: ./clone_folder.ps1
 
 init:
-  - set ORIGPATH=%PATH%
-  - set tool=VS2017_x86
-  - set DEPLOYMENT_TARGET=ciuploadtool-testing_windows-%tool%_%APPVEYOR_REPO_COMMIT:~0,7%.zip
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
-  - set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin";%PATH%
+  - ps: ./init.ps1
 
 install:
-  - md c:\dev\ciuploadtool
-  - cd c:\dev\ciuploadtool
-  - curl -fsSL https://github.com/d1vanov/ciuploadtool/releases/download/continuous-development/ciuploadtool_windows_x86.zip -o ciuploadtool_windows_x86.zip
-  - 7z x ciuploadtool_windows_x86.zip
+  - ps: ./install.ps1
 
 before_build:
-  - cd c:\dev\ciuploadtool-testing
-  - md build
+  - ps: ./before_build.ps1
 
 build_script:
-  - if %prepare_mode%==YES c:\dev\ciuploadtool\ciuploadtool.exe -suffix="%APPVEYOR_REPO_BRANCH%" -preponly
-  - ps: if ($env:prepare_mode -eq "YES") { throw "Failing in order to stop the current build matrix job early" }
-  - cd c:\dev\ciuploadtool-testing\build
-  - cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="c:/dev/install"
-  - cmake --build . --target all
-  - cmake --build . --target install
+  - ps: ./build_script.ps1
 
 after_build:
-  - cd c:\dev
-  - 7z a %DEPLOYMENT_TARGET% c:\dev\install\*
-  - md %APPVEYOR_BUILD_FOLDER%\artifacts
-  - cp %DEPLOYMENT_TARGET% %APPVEYOR_BUILD_FOLDER%\artifacts
+  - ps: ./after_build.ps1
 
 artifacts:
   - path: 'artifacts\*.zip'
     name: archive
 
 on_finish:
-  - set PATH=C:\go\bin;%PATH%
-  - echo "APPVEYOR_REPO_BRANCH = "
-  - echo %APPVEYOR_REPO_BRANCH%
-  - cd c:\dev
-  - c:\dev\ciuploadtool\ciuploadtool.exe -verbose -suffix="%APPVEYOR_REPO_BRANCH%" %APPVEYOR_BUILD_FOLDER%\artifacts\*
+  - ps: ./on_finish.ps1
 
 matrix:
   fast_finish: true
