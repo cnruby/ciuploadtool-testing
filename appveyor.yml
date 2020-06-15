@@ -22,10 +22,7 @@ environment:
       platform: amd64_x86
 
 clone_folder:
-  - |
-    if ($isWindows) {
-      c:\dev\ciuploadtool-testing
-    }
+  - c:\dev\ciuploadtool-testing
 
 init:
   - ps: ./init.ps1
